@@ -124,7 +124,7 @@ def apply_clearance(cart)
   result = []
   for cur_item in cart do
     if cur_item[:clearance]
-      cur_item[:price] = cur_item[:price] * 0.8
+      cur_item[:price] = (cur_item[:price] * 0.8).round(2)
       result << cur_item
     else
       result << cur_item
@@ -184,4 +184,4 @@ end
 # puts 'Coupon'
 # p test_data[1]
 # p 'checkout'
-# p checkout(test_data[0], test_data[1])
+# p checkout(test_data[0], test_data[1]) 
