@@ -78,55 +78,55 @@ def apply_coupons(cart, coupons)
   # output:
   # - new ary of hashes (collection of cart items with coupons applied)
   #   - where applicable: "ITEM W/COUPON"
-  result = [] 
+  result = []
   for cur_item in cart do
-    coupon_applied = false 
+    coupon_applied = false
     for cur_coupon in coupons do
       if cur_item[:item] == cur_coupon[:item] and cur_item[:count] >= cur_coupon[:num]
-        # We have more than enough items to apply the coupon 
-        # create the discounted item 
+        # We have more than enough items to apply the coupon
+        # create the discounted item
         discounted_item = create_discounted_item(cur_item, cur_coupon)
-        # decrement the remaining items 
-        cur_item[:count] = cur_item[:count] - cur_coupon[:num] 
-        # add the items to the output 
+        # decrement the remaining items
+        cur_item[:count] = cur_item[:count] - cur_coupon[:num]
+        # add the items to the output
         result << cur_item
         result << discounted_item
-        # denote we applied the coupon 
-        coupon_applied = true 
+        # denote we applied the coupon
+        coupon_applied = true
       end
     end
-    if !coupon_applied 
-      result << cur_item 
+    if !coupon_applied
+      result << cur_item
     end
   end
-  return result 
+  return result
 end
 
 
 
 def create_discounted_item(item, coupon)
   discounted_item = {
-    :item => item[:item] + " W/COUPON", 
-    :price => coupon[:cost] / coupon[:num], 
-    :clearance => item[:clearance], 
-    :count => coupon[:num] 
+    :item => item[:item] + " W/COUPON",
+    :price => coupon[:cost] / coupon[:num],
+    :clearance => item[:clearance],
+    :count => coupon[:num]
   }
   return discounted_item
-end 
+end
 
 
 def apply_clearance(cart)
-  # Arguments: 
-  # --> Cart = array of item hashes 
-  # Returns: 
-  # --> a new Array where every unique item in the original is present but with its price 
-  #     reduced by 20% of value is true 
-  result = [] 
+  # Arguments:
+  # --> Cart = array of item hashes
+  # Returns:
+  # --> a new Array where every unique item in the original is present but with its price
+  #     reduced by 20% of value is true
+  result = []
   for cur_item in cart do
     if cur_item[:clearance]
-      cur_item[:price] = cur_item[:price] * 0.8 
+      cur_item[:price] = cur_item[:price] * 0.8
       result << cur_item
-    else 
+    else
       result << cur_item
     end
   end
@@ -147,34 +147,34 @@ def checkout(cart, coupons)
   consolidated_cart_w_coupons = apply_coupons(consolidate_cart, coupons)
   final_cart = apply_clearance(consolidated_cart_w_coupons)
 
-  total = 0 
+  total = 0
   for grocery_item in final_cart do
     line_item_cost = grocery_item[:price] * grocery_item[:count]
     total += line_item_cost
-  end 
+  end
 
-  if total > 100 
-    total = total * 0.90 
-  end 
+  if total > 100
+    total = total * 0.90
+  end
 
-  return total 
+  return total
 end
 
 
 
-# returns an AoAoH 
-# Top Level Array: 
-#   pos[1] => Array of consolidated grocery items (cart) 
-#   pos[2] => Array of coupons 
+# returns an AoAoH
+# Top Level Array:
+#   pos[1] => Array of consolidated grocery items (cart)
+#   pos[2] => Array of coupons
 # def create_test_data()
 #   grocery_items = [
 #     {:item => "AVOCADO", :price => 3.00, :clearance => true, :count => 3},
 #     {:item => "KALE",    :price => 3.00, :clearance => false, :count => 1}
 #   ]
 #   coupons = [{:item => "AVOCADO", :num => 2, :cost => 5.00}]
-  
-#   return grocery_items, coupons 
-# end 
-# test_data = create_test_data() 
+
+#   return grocery_items, coupons
+# end
+# test_data = create_test_data()
 # result = apply_coupons(test_data[0], test_data[1])
 # puts result
