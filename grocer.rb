@@ -99,6 +99,7 @@ def apply_coupons(cart, coupons)
         }
         output << cart[i]
       end
+      j += 1
     end
     # no coupons matched the item
     if start_ct + 1 != output.count
