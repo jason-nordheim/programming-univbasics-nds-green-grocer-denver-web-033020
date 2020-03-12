@@ -144,13 +144,13 @@ def checkout(cart, coupons)
   # BEFORE it begins the work of calculating the total (or else you might have
   # some irritated customers
   consolidated_cart = consolidate_cart(cart)
-  consolidated_cart_w_coupons = apply_coupons(consolidate_cart, coupons)
+  consolidated_cart_w_coupons = apply_coupons(consolidated_cart, coupons)
   final_cart = apply_clearance(consolidated_cart_w_coupons)
 
   total = 0
   for grocery_item in final_cart do
-    line_item_cost = grocery_item[:price] * grocery_item[:count]
-    total += line_item_cost
+    item_cost = grocery_item[:price] * grocery_item[:count]
+    total += item_cost
   end
 
   if total > 100
@@ -165,16 +165,23 @@ end
 # returns an AoAoH
 # Top Level Array:
 #   pos[1] => Array of consolidated grocery items (cart)
-#   pos[2] => Array of coupons
+# #   pos[2] => Array of coupons
 # def create_test_data()
 #   grocery_items = [
 #     {:item => "AVOCADO", :price => 3.00, :clearance => true, :count => 3},
-#     {:item => "KALE",    :price => 3.00, :clearance => false, :count => 1}
+#     {:item => "KALE",    :price => 3.00, :clearance => false, :count => 1},
+#     {:item => "PEANUT BUTTER", :price => 3.00, :clearance => true,  :count => 2},
+#     {:item => "KALE", :price => 3.00, :clearance => false, :count => 3},
+#     {:item => "SOY MILK", :price => 4.50, :clearance => true,  :count => 1}
 #   ]
 #   coupons = [{:item => "AVOCADO", :num => 2, :cost => 5.00}]
 
 #   return grocery_items, coupons
 # end
 # test_data = create_test_data()
-# result = apply_coupons(test_data[0], test_data[1])
-# puts result
+# p 'Cart'
+# p test_data[0]
+# puts 'Coupon'
+# p test_data[1]
+# p 'checkout'
+# p checkout(test_data[0], test_data[1]) 
