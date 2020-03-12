@@ -88,10 +88,9 @@ def apply_coupons(cart, coupons)
           # create the discounted item
           discounted_item = create_discounted_item(cur_item, cur_coupon)
           # decrement the remaining items
-          reg_item = cur_item
-          reg_item[:count] = reg_item[:count] - cur_coupon[:num]
+          cur_item[:count] = cur_item[:count] - cur_coupon[:num]
           # add the items to the output
-          result << reg_item
+          result << cur_item
           result << discounted_item
           # denote we applied the coupon
           coupon_applied = true
