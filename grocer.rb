@@ -82,19 +82,17 @@ def apply_coupons(cart, coupons)
   for cur_item in cart do
     coupon_applied = false
     for cur_coupon in coupons do
-      if cur_item[:item] == cur_coupon[:item]
-        if cur_item[:count] >= cur_coupon[:num]
-          # We have more than enough items to apply the coupon
-          # create the discounted item
-          discounted_item = create_discounted_item(cur_item, cur_coupon)
-          # decrement the remaining items
-          cur_item[:count] = cur_item[:count] - cur_coupon[:num]
-          # add the items to the output
-          result << cur_item
-          result << discounted_item
-          # denote we applied the coupon
-          coupon_applied = true
-        end
+      if cur_item[:item] == cur_coupon[:item] and cur_item[:count] >= cur_coupon[:num]
+        # We have more than enough items to apply the coupon
+        # create the discounted item
+        discounted_item = create_discounted_item(cur_item, cur_coupon)
+        # decrement the remaining items
+        cur_item[:count] = cur_item[:count] - cur_coupon[:num]
+        # add the items to the output
+        result << cur_item
+        result << discounted_item
+        # denote we applied the coupon
+        coupon_applied = true
       end
     end
     if !coupon_applied
