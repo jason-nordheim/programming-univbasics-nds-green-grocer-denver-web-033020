@@ -73,41 +73,54 @@ end
 
 def apply_coupons(cart, coupons)
   # input:
-  # - ary (collection of cart item hashes)
+  # - ary (collection of cart item hashes, already consolidated)
   # - ary (collection of coupon hashes)
   # output:
   # - new ary of hashes (collection of cart items with coupons applied)
   #   - where applicable: "ITEM W/COUPON"
-  output = []
-  i = 0
-  while i < cart.count do
-    j = 0
-    start_ct = output.count
-    while j < coupons.count do
-      if coupons[j][:item] == cart[i][:item] and cart[i][:count] >= coupons[j][:num]
-        # we can use the coupon
-        # remove the items to which the coupon applies
-        cart[i][:count] -= coupons[j][:num]
-        if cart[i][:count] > 0
-          output << cart[i]
-        end
-        discounted_item = {
-          :item => cart[i][:item] + "W/COUPON",
-          :price => coupons[j][:price] / coupons[j][:num],
-          :clearance => cart[i][:clearance],
-          :count => coupon[j][:num]
-        }
-        output << cart[i]
+  result = []
+  for cur_item in cart do
+    coupon_applied = false
+    for cur_coupon in coupons do
+      if cur_item[:item] == cur_coupon[:item] and cur_item[:count] > cur_coupon[:num]
+        # We have more than enough items to apply the coupon
+        # create the discounted item
+        discounted_item = create_discounted_item(cur_item, cur_coupon)
+        # decrement the remaining items
+        reg_item = cur_item
+        reg_item[:count] -= cur_coupon[:num]
+        # add the items to the output
+        output << reg_item
+        output << discounted_item
+        # denote we applied the coupon
+        coupon_applied = true
+      elsif cur_item[:item] == cur_coupon[:item] and cur_item[:count] == cur_coupon[:num]
+        # we have exactly enough items to apply the coupon
+        # create the discounted item
+        discounted_item = create_discounted_item(cur_item, cur_coupon)
+        # add the item - we should have none remaining
+        output << discounted_item
+        # denote we applied the coupon
+        coupon_applied = true
       end
-      j += 1
     end
-    # no coupons matched the item
-    if start_ct + 1 != output.count
-      output << cart[i]
+    if !coupon_applied
+      output << item
     end
-    i += 1
   end
+  return result
 end
+
+def create_discounted_item(item, coupon)
+  discounted_item = {
+    :item => item[:item] + " W/COUPON",
+    :price => coupon[:cost] / coupon[:num],
+    :clearance => item[:clearance],
+    :count => coupon[:num]
+  }
+  return discounted_item
+end
+
 
 def apply_clearance(cart)
   # Consult README for inputs and outputs
