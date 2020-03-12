@@ -94,14 +94,6 @@ def apply_coupons(cart, coupons)
           result << discounted_item
           # denote we applied the coupon
           coupon_applied = true
-        elsif cur_item[:count] == cur_coupon[:num]
-          # we have exactly enough items to apply the coupon
-          # create the discounted item
-          discounted_item = create_discounted_item(cur_item, cur_coupon)
-          # add the item - we should have none remaining
-          result << discounted_item
-          # denote we applied the coupon
-          coupon_applied = true
         end
       end
     end
