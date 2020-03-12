@@ -145,7 +145,18 @@ def checkout(cart, coupons)
   consolidated_cart = consolidate_cart(cart)
   consolidated_cart_w_coupons = apply_coupons(consolidate_cart, coupons)
   final_cart = apply_clearance(consolidated_cart_w_coupons)
-  return final_cart
+
+  total = 0
+  for grocery_item in final_cart do
+    line_item_cost = grocery_item[:price] * grocery_item[:count]
+    total += line_item_cost
+  end
+
+  if total > 100
+    total = total * 0.90
+  end
+
+  return total
 end
 
 
